@@ -1,4 +1,4 @@
-import { Alchemy, Network } from 'alchemy-sdk';
+import { Alchemy, Network, Utils } from 'alchemy-sdk';
 import { useEffect, useState } from 'react';
 
 import './App.css';
@@ -19,18 +19,98 @@ const settings = {
 //   https://docs.alchemy.com/reference/alchemy-sdk-api-surface-overview#api-surface
 const alchemy = new Alchemy(settings);
 
+
 function App() {
   const [blockNumber, setBlockNumber] = useState();
-
-  useEffect(() => {
-    async function getBlockNumber() {
-      setBlockNumber(await alchemy.core.getBlockNumber());
-    }
-
-    getBlockNumber();
+  const [block, setBlock] = useState({
+    hash: "",
+    parentHash: "",
+    miner: "",
+    difficulty: 0,
+    timestamp: 0,
+    transactions: []
   });
 
-  return <div className="App">Block Number: {blockNumber}</div>;
+  const getBlock = async (blockNumber) => {
+    const block = await alchemy.core.getBlockWithTransactions(blockNumber);
+    console.log(block);
+    if (blockNumber < 0 || !block) {
+      alert(`Block #${blockNumber} not found/exist yet!`);
+    } else {
+      setBlock(block);
+    }
+  }
+
+
+  const getBlockNumber = async () => {
+    let blockNumber = await alchemy.core.getBlockNumber()
+    setBlockNumber(blockNumber);
+    await getBlock(blockNumber);
+  }
+
+  useEffect(() => {
+    if (!blockNumber) {
+      getBlockNumber();
+    }
+  });
+
+  function handleBlockChange(change) {
+    const newBlockNumber = blockNumber + change;
+    if (newBlockNumber >= 0) {
+      setBlockNumber(newBlockNumber);
+      getBlock(blockNumber);
+    }
+  }
+
+  return <div className="App">
+    <div>
+      <button onClick={() => handleBlockChange(-1)}>Previous</button>&nbsp;&nbsp;
+      <span>Block Number: {blockNumber}</span>&nbsp;&nbsp;
+      <button onClick={() => handleBlockChange(1)}>Next</button>
+    </div>
+    <div className="block-info">
+      {block ? (
+        <div>
+          <h2>Block Info</h2>
+          <ul>
+            <li>Block Hash: {block.hash}</li>
+            <li>Parent Hash: {block.parentHash}</li>
+            <li>Miner: {block.miner}</li>
+            <li>Difficulty: {block.difficulty}</li>
+            <li>Timestamp: {new Date(block.timestamp * 1000).toLocaleString()}</li>
+            {/* Add more block info as needed */}
+          </ul>
+        </div>
+      ) : (
+        <p>Loading block info...</p>
+      )}
+    </div>
+    <div className="block-transactions">
+      <h2>Block Transactions</h2>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Transaction Hash</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Value</th>
+            <th>Confirmations</th>
+          </tr>
+        </thead>
+        <tbody>
+          {block.transactions.map((tx) => (
+            <tr key={tx.hash}>
+              <td>{tx.hash}</td>
+              <td>{tx.from}</td>
+              <td>{tx.to}</td>
+              <td>{Utils.formatUnits(tx.value, 18)}</td>
+              <td>{tx.confirmations}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>;
 }
 
 export default App;

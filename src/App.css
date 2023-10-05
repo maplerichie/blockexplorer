@@ -1,38 +1,87 @@
+/* App.css */
+
 .App {
   text-align: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.block-navigation {
+  margin-bottom: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.block-navigation button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  margin: 0 10px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.block-info {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.block-info h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.block-info ul {
+  list-style: none;
+  padding: 0;
+}
+
+.block-info li {
+  margin: 5px 0;
+}
+
+.block-transactions {
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+
+.block-transactions h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.block-transactions table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.block-transactions th,
+.block-transactions td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+.block-transactions th {
+  background-color: #f2f2f2;
+}
+/* Add this CSS to your stylesheet */
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table th,
+.table td {
+  padding: 8px;
+  text-align: left;
+  overflow: hidden; /* Hide overflowing text */
+  white-space: nowrap; /* Prevent text from wrapping */
+  text-overflow: ellipsis; /* Show ellipsis (...) for overflow */
+  max-width: 320px; /* Adjust the maximum width as needed */
+  border-bottom: 1px solid #ddd;
+}
+
+/* Optionally, you can add a tooltip to display the full text on hover */
+.table tr:hover {
+  background-color: black;
   color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
